@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Recipe from './screens/Recipe';
 import { NavigationContainer } from '@react-navigation/native';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -19,7 +19,7 @@ export default function App() {
         headerShown: false,
       }}>
         <Stack.Screen name="Home" component={Home}/>
-        <Stack.Screen name="Recipe" component={Recipe} options={{headerShown: true, headerTitleStyle: {display: 'none'}, headerStyle:{backgroundColor: "#eeeeee"}}}/>
+        <Stack.Screen name="Recipe" component={Recipe} />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -79,7 +79,6 @@ function Home({navigation}) {
 
   React.useEffect(()=>{
     getTasty(0,10)
-    getTastyModel(0,1)
   },[])
 
   React.useEffect(()=>{
@@ -87,29 +86,51 @@ function Home({navigation}) {
   },[loading])
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingHorizontal: 15}]}>
       <View 
-        style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 40, paddingHorizontal: 20}}>
+        style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 40}}>
 
         <TouchableOpacity disabled={loading || from == 0}
-          style={{width: 50, height: 50, backgroundColor: "#7cadfc", borderRadius: 10}} 
+          style={{width: 50, height: 50, backgroundColor: loading||from==0?"#ddd":"#7cadfc", borderRadius: 10, justifyContent:'center', alignItems:'center'}} 
           onPress={()=>{
             if(!loading) {
               getTasty(from > 0 ? from-10 : 0, 10)
               from > 0 ? setFrom(from-10) : console.log("page 1")
             }
           }}>
-
+        <Icon
+          name='arrow-back-outline'
+          color="#fff"
+          size={30}
+        />
         </TouchableOpacity>
+
+        <Text 
+            style={{
+                fontSize:18,
+                textAlign:"center",
+                fontWeight: 'normal',
+                textAlignVertical:"center",
+                width: 120, height: 50,
+                backgroundColor: "#7cadfc", borderRadius: 10,
+                color:"#ffffff",
+                fontWeight:"bold"
+            }}>
+            Tastyapi!
+        </Text>
         <TouchableOpacity disabled={loading}
-          style={{width: 50, height: 50, backgroundColor: "#7cadfc", borderRadius: 10}}
+          style={{width: 50, height: 50, backgroundColor: loading?"#ddd":"#7cadfc", borderRadius: 10, justifyContent:'center', alignItems:'center',}}
           onPress={()=>{
             if(!loading) {
               getTasty(from+10,10)
               setFrom(from+10)  
             }
           }}>
-
+        <Icon
+          name='arrow-forward-outline'
+          color="#fff"
+          size={30}
+        />
         </TouchableOpacity>
         
       </View>
@@ -123,13 +144,22 @@ function Home({navigation}) {
         extraData={from}
         renderItem={({item, index}) => (
           <TouchableOpacity 
-          style={{marginHorizontal: 20, marginVertical: 10, paddingVertical: 20, paddingHorizontal: 10, backgroundColor: "#eeeeee", borderRadius: 10}}
+          style={{marginBottom: 15, backgroundColor: "#eeeeee", borderRadius: 10, width:"100%", height:200}}
           onPress={()=>{
             navigation.navigate('Recipe', {
-              name: item.name,
+              nam: item.name,
+              tags: item.tags,
+              desc: item.description,
+              nutrition: item.nutrition,
+              thumbnail: item.thumbnail_url,
+              components: item.sections[0].components,
+              instructions: item.instructions
             })
           }}>
-            <Text style={{fontSize: 20, fontFamily: "Roboto", fontWeight: 600}}>{item.name}</Text>
+            <Image 
+            style={{flex:1, width:null, minHeight:null, resizeMode:'cover'}}
+            source={{uri: item.thumbnail_url}} />
+            <Text style={{fontSize: 20, paddingLeft: 5, fontWeight: 600}}>{item.name}</Text>
           </TouchableOpacity>
         )}
         />}

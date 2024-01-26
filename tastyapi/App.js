@@ -159,7 +159,7 @@ function Home({navigation}) {
             <Image 
             style={{flex:1, width:null, minHeight:null, resizeMode:'cover'}}
             source={{uri: item.thumbnail_url}} />
-            <Text style={{fontSize: 20, paddingLeft: 5, fontWeight: 600}}>{item.name}</Text>
+            <Text style={{fontSize: 20, margin:5, paddingLeft:5, fontWeight: 600}}>{item.name}</Text>
           </TouchableOpacity>
         )}
         />}
